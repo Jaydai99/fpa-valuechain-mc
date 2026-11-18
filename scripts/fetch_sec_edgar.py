@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SEC EDGAR XBRL Direct Extractor for AI-Berkshire FP&A Stock Analyzer (v3.1)
+SEC EDGAR XBRL Direct Extractor for FPA Value Chain MC (v3.1)
 Fetches official US GAAP 10-K & 10-Q line items from data.sec.gov/api/xbrl/companyfacts/
 to eliminate missing sub-lines (D&A, SBC, Tax, Interest, Leases, CapEx) for US tickers.
 """
@@ -12,7 +12,7 @@ import sys
 import urllib.request
 
 USER_AGENT = os.environ.get(
-    "SEC_USER_AGENT", "AIBerkshireAnalyzer/3.1 (research@aiberkshire.local)"
+    "SEC_USER_AGENT", "FPAValueChainMC/3.1 (research@fpavaluechainmc.local)"
 )
 
 TAG_MAP = {

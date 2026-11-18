@@ -1,17 +1,17 @@
-# AI-Berkshire 10Y FP&A, Value-Chain, Fat-Tail Monte Carlo & AI/Triad Stock Analyzer (v3.1)
+# FPA Value Chain MC — 10Y FP&A, Value-Chain, Fat-Tail Monte Carlo & AI/Triad Stock Analyzer (v3.1)
 
-An institutional-grade Antigravity agent skill implementing the 9-Phase AI-Berkshire stock analysis framework, combined with direct SEC EDGAR XBRL data extraction and a self-contained, zero-CDN print-ready HTML/CSS dashboard engine.
+An institutional-grade Antigravity agent skill implementing a 9-Phase equity analysis framework for any stock ticker, combined with direct SEC EDGAR XBRL data extraction and a self-contained, zero-CDN print-ready HTML/CSS dashboard engine.
 
 ## Repository Structure
 
 ```text
-ai-berkshire-fpa-mc-stock-analyzer/
+fpa-valuechain-mc/
 ├── SKILL.md                      # Main Antigravity skill specification (Phases 1–9)
 ├── scripts/
 │   └── fetch_sec_edgar.py        # Direct SEC EDGAR XBRL JSON API extractor (10-K & 10-Q)
 ├── examples/
 │   └── nvda/
-│       ├── index.html            # Verified NVDA sample dashboard (Phases 1–9)
+│       ├── index.html            # Verified NVDA dashboard updated through Q3 FY27 (Nov 17, 2026 8-K)
 │       └── nvda_sec_xbrl.json    # Extracted SEC XBRL 10Y + quarterly dataset (CIK 0001045810)
 └── README.md
 ```
@@ -27,8 +27,8 @@ ai-berkshire-fpa-mc-stock-analyzer/
 ## Installation in Antigravity
 
 Copy or clone this folder into either:
-- **Workspace-level:** `<your-workspace>/.agents/skills/ai-berkshire-fpa-mc-stock-analyzer/`
-- **Global-level (all workspaces):** `~/.gemini/config/skills/ai-berkshire-fpa-mc-stock-analyzer/`
+- **Workspace-level:** `<your-workspace>/.agents/skills/fpa-valuechain-mc/`
+- **Global-level (all workspaces):** `~/.gemini/config/skills/fpa-valuechain-mc/`
 
 ## Standalone SEC EDGAR Script Usage
 

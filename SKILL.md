@@ -1,9 +1,9 @@
 ---
-name: ai-berkshire-fpa-mc-stock-analyzer
-description: Analyzes any stock ticker using the full 9-Phase AI-Berkshire adversarial framework, Data Provenance & Epistemic Tagging ([FILING]/[CONSENSUS]/[PROXY]/[ASSUMP]/[SIM]), 2-Layer Plain + Institutional FP&A explanations, Jack Alexander FP&A standard formulas, Full Cost-Leverage & Commercial Driver Diagnostics (CapEx/D&A, OpEx, HC, OHC, FC/VC, DOL, PVM, Book-to-Bill/NRR, Cash Conversion, Covenants & Utilization), 10-year financial schedule, 3-Step DuPont ROE, Direct Competitor & Value-Chain Supplier Benchmarking, Consulting Visual Suite (Patterns A, B, C), Time-Series ML, 10-Dimension Objective Rubric, Fat-Tail 10,000-run Monte Carlo simulation (Student-t + CVaR 95%), and Phase 8 AI/Headcount/Triad Growth—combining full 2-wave data depth with a zero-CDN Pure HTML/CSS Print-Ready engine to eliminate 500 TURN_STEPS_EXCEEDED errors.
+name: fpa-valuechain-mc
+description: FPA Value Chain MC — Analyzes any stock ticker using the full 9-Phase adversarial equity framework, Data Provenance & Epistemic Tagging ([FILING]/[CONSENSUS]/[PROXY]/[ASSUMP]/[SIM]), 2-Layer Plain + Institutional FP&A explanations, Jack Alexander FP&A standard formulas, Full Cost-Leverage & Commercial Driver Diagnostics (CapEx/D&A, OpEx, HC, OHC, FC/VC, DOL, PVM, Book-to-Bill/NRR, Cash Conversion, Covenants & Utilization), 10-year financial schedule, 3-Step DuPont ROE, Direct Competitor & Value-Chain Supplier Benchmarking, Consulting Visual Suite (Patterns A, B, C), Time-Series ML, 10-Dimension Objective Rubric, Fat-Tail 10,000-run Monte Carlo simulation (Student-t + CVaR 95%), and Phase 8 AI/Headcount/Triad Growth—combining full 2-wave + SEC EDGAR XBRL data depth with a zero-CDN Pure HTML/CSS Print-Ready engine.
 ---
 
-# AI-Berkshire 10Y FP&A, Value-Chain, Fat-Tail Monte Carlo & AI/Triad Stock Analyzer (v3.1 — Full 2-Wave + Complete FP&A Cost/Leverage/Drivers + Provenance + Zero-CDN Print-Ready Edition)
+# FPA Value Chain MC — 10Y FP&A, Value-Chain, Fat-Tail Monte Carlo & AI/Triad Stock Analyzer (v3.1)
 
 ## Hard Step-Budget, Mode Routing & Anti-Timeout Protocol (CRITICAL — ZERO ERROR 500 / TURN_STEPS_EXCEEDED)
 
