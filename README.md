@@ -9,45 +9,45 @@ fpa-valuechain-mc/
 ├── SKILL.md                 # 9-Phase equity analysis skill specification
 ├── README.md                # Guide, workflow docs & live capture gallery
 ├── docs/
-│   ├── build_presentation.py
-│   ├── slides.html          # 16-slide English deck source
+│   ├── build_presentation.py # Builds HTML, PDF & 16 slide PNGs
+│   ├── slides.html           # 16-slide English deck source
+│   ├── slides/               # 16 rendered slide PNGs (slide_01..16.png)
 │   └── fpa-valuechain-mc-presentation.pdf
 ├── scripts/
-│   └── fetch_sec_edgar.py   # SEC EDGAR XBRL JSON API (10-K & 10-Q)
+│   └── fetch_sec_edgar.py    # SEC EDGAR XBRL JSON API (10-K & 10-Q)
 └── examples/
     └── nvda/
-        ├── index.html       # Verified NVDA Q3 FY27 dashboard (Nov 17 8-K)
+        ├── index.html        # Verified NVDA Q3 FY27 dashboard (Nov 17 8-K)
         ├── nvda_sec_xbrl.json
-        └── shot_01..14.png  # 14 surgical section captures (P1–P9)
+        └── shot_01..14.png   # 14 surgical section captures (P1–P9)
 ```
 
-## Methodology Presentation & Live `NVDA` Dashboard Captures
+## Methodology & Full Function Presentation (Captured from Styled HTML Slides)
 
-- **English Presentation Deck (16-Slide PDF):** [docs/fpa-valuechain-mc-presentation.pdf](docs/fpa-valuechain-mc-presentation.pdf) ([HTML source](docs/slides.html) · [PDF builder](docs/build_presentation.py)) — explains core valuation math (**Present Value**, **FCFF Discounted Cash Flow**, **10,000-run Fat-Tail Student-t Monte Carlo with CVaR 95%**), **Jack Alexander FP&A CVP & DuPont**, **10-Dimension Objective Rubric**, and walks through every function (`Phase 1` to `Phase 9`) with 14 live `NVDA` Q3 FY27 captures.
+- **Self-Contained Deck:** [docs/fpa-valuechain-mc-presentation.pdf](docs/fpa-valuechain-mc-presentation.pdf) ([HTML source](docs/slides.html) · [Builder](docs/build_presentation.py)) — explains **Present Value (PV)**, **Unlevered FCFF DCF**, **10,000-run Fat-Tail Student-t Monte Carlo & CVaR 95%**, **CVP / DOL / DuPont ROE**, **10-Dimension Objective Rubric**, and every functional module (`Phase 1` to `Phase 9`) using 14 live `NVDA` Q3 FY27 captures.
 
-<details>
-<summary>Index of all 14 surgical dashboard captures (<code>examples/nvda/shot_01..shot_14.png</code>)</summary>
+### Part 1 — Cover, Core Valuation Principles & Execution Architecture (Slides 1–4)
 
-| Capture | Phase / Function |
+![Slide 1 — Cover](docs/slides/slide_01.png)
+
+![Slide 2 — Present Value & Discounted Cash Flow Core](docs/slides/slide_02.png)
+
+![Slide 3 — 10,000-Run Fat-Tail Monte Carlo & CVaR 95%](docs/slides/slide_03.png)
+
+![Slide 4 — FP&A Cost Leverage, DuPont ROE, Epistemic Rigor & Pipeline](docs/slides/slide_04.png)
+
+### Part 2 — Complete Function-by-Function Walkthrough (Slides 5–16 with Live `NVDA` Captures)
+
+| Module / Phase | Captured Slide |
 | --- | --- |
-| [shot_01_p1_verdict.png](examples/nvda/shot_01_p1_verdict.png) | P1A: Navigation, Provenance Strip & Dual-Layer Verdict |
-| [shot_02_p1_q3_gate.png](examples/nvda/shot_02_p1_q3_gate.png) | P1B: Q3 FY27 Beat Tracker & Accounting Identity Gate |
-| [shot_03_p2_10y_table.png](examples/nvda/shot_03_p2_10y_table.png) | P2A: 10Y SEC XBRL Ledger & Commercial Drivers |
-| [shot_04_p2_cvp_charts.png](examples/nvda/shot_04_p2_cvp_charts.png) | P2B: Cost-Volume-Profit (FC/VC/DOL) & Scale/Margin Charts |
-| [shot_05_p22_dupont_vc.png](examples/nvda/shot_05_p22_dupont_vc.png) | P2.2A/B: Interactive 3-Step DuPont ROE & Value-Chain Map |
-| [shot_06_p22_peers_matrix.png](examples/nvda/shot_06_p22_peers_matrix.png) | P2.2C: Industry & Supplier Benchmarking Matrix |
-| [shot_07_p22_consulting_suite.png](examples/nvda/shot_07_p22_consulting_suite.png) | P2.2D: Consulting Visual Suite (Patterns A, B, C) |
-| [shot_08_p3_ml_forensics.png](examples/nvda/shot_08_p3_ml_forensics.png) | P3: Time-Series ML Forecast & Forensic Diagnostics |
-| [shot_09_p4_forces_p5_masters.png](examples/nvda/shot_09_p4_forces_p5_masters.png) | P4 & P5A: Force Alignment Matrix & 4-Masters Committee |
-| [shot_10_p5_rubric.png](examples/nvda/shot_10_p5_rubric.png) | P5B: 10-Dimension Objective Scoring Rubric (80/100 PASS) |
-| [shot_11_p6_dcf_mc.png](examples/nvda/shot_11_p6_dcf_mc.png) | P6A: Jack Alexander DCF (22.1/22.2) & 10k Fat-Tail Monte Carlo |
-| [shot_12_p6_actions_p7_audit.png](examples/nvda/shot_12_p6_actions_p7_audit.png) | P6B & P7: 3-Tier Action Zones, Mirror Test & 10-Point Audit |
-| [shot_13_p8_ai_triad.png](examples/nvda/shot_13_p8_ai_triad.png) | P8: AI Monetization Audit, Workforce Leverage & Geo Triad |
-| [shot_14_p9_verdict.png](examples/nvda/shot_14_p9_verdict.png) | P9: Ultimate All-Phases Synthesis & Distilled Verdict |
+| **Slide 5 — Phase 1A: Nav Bar, Provenance Strip & Dual-Layer Verdict**<br>![Slide 5](docs/slides/slide_05.png) | **Slide 6 — Phase 1B: Live Earnings Beat & Accounting Identity Gate**<br>![Slide 6](docs/slides/slide_06.png) |
+| **Slide 7 — Phase 2A: 10-Year SEC XBRL Ledger & Commercial Drivers**<br>![Slide 7](docs/slides/slide_07.png) | **Slide 8 — Phase 2B: CVP Cost Structure (FC/VC/DOL) & Dual Charts**<br>![Slide 8](docs/slides/slide_08.png) |
+| **Slide 9 — Phase 2.2A/B: Interactive DuPont ROE Tree & Value-Chain Map**<br>![Slide 9](docs/slides/slide_09.png) | **Slide 10 — Phase 2.2C: Industry & Supplier Benchmarking Matrix**<br>![Slide 10](docs/slides/slide_10.png) |
+| **Slide 11 — Phase 2.2D: Consulting Visual Suite (Patterns A, B, C)**<br>![Slide 11](docs/slides/slide_11.png) | **Slide 12 — Phase 3 & 4: Time-Series ML, Forensics & Force Alignment**<br>![Slide 12](docs/slides/slide_12.png) |
+| **Slide 13 — Phase 5: 4-Masters Committee & 10-Dim Objective Rubric**<br>![Slide 13](docs/slides/slide_13.png) | **Slide 14 — Phase 6A: Jack Alexander DCF & Live 10k Monte Carlo**<br>![Slide 14](docs/slides/slide_14.png) |
+| **Slide 15 — Phase 6B & 7: Action Zones, Mirror Test & 10-Pt Self-Audit**<br>![Slide 15](docs/slides/slide_15.png) | **Slide 16 — Phase 8, 9 & Quick Start: AI/Triad & Distilled Verdict**<br>![Slide 16](docs/slides/slide_16.png) |
 
-</details>
-
-### Live `NVDA` Dashboard Captures (Q3 FY27 / SEC 8-K Verified)
+### Full-Resolution Section Captures (`examples/nvda/`)
 
 ![NVDA Phase 1 Verdict & Dual-Layer Opener](examples/nvda/shot_01_p1_verdict.png)
 

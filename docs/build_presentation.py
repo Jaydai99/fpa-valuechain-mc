@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Renumber slide footers cleanly, enforce English-only presentation text, and export print-ready 16:9 PDF."""
+"""Build English 16:9 HTML presentation, standalone single-file HTML, PDF, and 16 slide PNG captures."""
 
 from pathlib import Path
+import base64
 import os
 import re
 import shutil
@@ -12,10 +13,10 @@ DOCS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = DOCS_DIR.parent
 HTML_PATH = DOCS_DIR / "slides.html"
 PDF_REPO = DOCS_DIR / "fpa-valuechain-mc-presentation.pdf"
-PDF_WORKSPACE = Path(r"c:\Users\User\iCloudDrive\Learning-icloud\FPA-Value-Chain-MC-Presentation.pdf")
-PNG_CHECK_DIR = Path(
-    r"C:\Users\User\.gemini\antigravity\brain\4efd6045-983c-4279-bc51-6a1ee8d1d8e1\scratch\slides_check_v3"
-)
+SLIDES_PNG_DIR = DOCS_DIR / "slides"
+WORKSPACE_ROOT = Path(r"c:\Users\User\iCloudDrive\Learning-icloud")
+PDF_WORKSPACE = WORKSPACE_ROOT / "FPA-Value-Chain-MC-Presentation.pdf"
+HTML_STANDALONE = WORKSPACE_ROOT / "FPA-Value-Chain-MC-Presentation.html"
 
 EDGE_CANDIDATES = [
     r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
@@ -28,6 +29,21 @@ def find_edge() -> str:
         if os.path.exists(path):
             return path
     raise FileNotFoundError("Microsoft Edge executable not found for headless PDF rendering.")
+
+
+def inline_images(html_text: str, base_dir: Path) -> str:
+    """Embed relative PNG references as base64 data URIs so HTML works standalone anywhere."""
+    pattern = re.compile(r'src="([^"]+\.png)"')
+
+    def _repl(match: re.Match[str]) -> str:
+        rel = match.group(1)
+        img_path = (base_dir / rel).resolve()
+        if not img_path.exists():
+            return match.group(0)
+        b64 = base64.b64encode(img_path.read_bytes()).decode("ascii")
+        return f'src="data:image/png;base64,{b64}"'
+
+    return pattern.sub(_repl, html_text)
 
 
 def main() -> None:
@@ -58,6 +74,10 @@ def main() -> None:
     if thai_chars:
         raise ValueError(f"Non-English Thai strings found in slides.html: {thai_chars[:5]}")
 
+    if WORKSPACE_ROOT.exists():
+        standalone_html = inline_images(txt, DOCS_DIR)
+        HTML_STANDALONE.write_text(standalone_html, encoding="utf-8")
+
     edge = find_edge()
     udir = tempfile.mkdtemp(prefix="edge_pdf_")
     try:
@@ -78,19 +98,22 @@ def main() -> None:
     finally:
         shutil.rmtree(udir, ignore_errors=True)
 
-    if PDF_WORKSPACE.parent.exists():
+    if WORKSPACE_ROOT.exists():
         shutil.copyfile(PDF_REPO, PDF_WORKSPACE)
 
     import fitz
 
-    PNG_CHECK_DIR.mkdir(parents=True, exist_ok=True)
+    SLIDES_PNG_DIR.mkdir(parents=True, exist_ok=True)
     doc = fitz.open(PDF_REPO)
     try:
         for i, page in enumerate(doc, 1):
-            page.get_pixmap(dpi=130).save(PNG_CHECK_DIR / f"slide_{i:02d}.png")
+            out_png = SLIDES_PNG_DIR / f"slide_{i:02d}.png"
+            # 13.333in x 7.5in @ 120 DPI = 1600 x 900 crisp 16:9 PNGs
+            page.get_pixmap(dpi=120).save(out_png)
         print(
             f"Slides: {n_slides} | Walkthroughs: {wf_total} | Thai: {len(thai_chars)} | "
-            f"PDF pages: {doc.page_count} | Bytes: {PDF_REPO.stat().st_size}"
+            f"PDF pages: {doc.page_count} | PDF bytes: {PDF_REPO.stat().st_size} | "
+            f"Standalone HTML bytes: {HTML_STANDALONE.stat().st_size if HTML_STANDALONE.exists() else 0}"
         )
     finally:
         doc.close()
