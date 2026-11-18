@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FPA Value Chain MC (v3.1) — Methodology, Architecture &amp; Full Function Guide</title>
+<style>
+@page { size: 13.333in 7.5in; margin: 0; }
+* { box-sizing: border-box; min-width: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+html, body {
+  margin: 0; padding: 0;
+  background: #cbd5e1;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #0f172a;
+}
+.mono { font-family: 'Consolas', 'Courier New', monospace; font-variant-numeric: tabular-nums; }
+.slide {
+  width: 13.333in; height: 7.5in;
+  background: #f8fafc;
+  padding: 0.36in 0.48in 0.30in;
+  display: flex; flex-direction: column; justify-content: space-between;
+  page-break-after: always; break-after: page; overflow: hidden;
+  border-top: 5px solid #002b49;
+}
+.slide:last-child { page-break-after: auto; break-after: auto; }
+.s-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 11px; flex-shrink: 0;
+}
+.s-kicker {
+  font-family: 'Consolas', monospace; font-size: 10.5px; font-weight: 700;
+  color: #d94e34; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.s-title { margin: 2px 0 0; font-size: 20.5px; font-weight: 800; color: #0f172a; letter-spacing: -0.015em; }
+.s-sub { font-size: 11.5px; color: #475569; font-weight: 600; text-align: right; max-width: 440px; }
+.s-foot {
+  display: flex; justify-content: space-between; font-family: 'Consolas', monospace;
+  font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 5px; margin-top: 9px; flex-shrink: 0;
+}
+
+.body-area { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; min-height: 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex: 1; min-height: 0; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.split-rail { display: grid; grid-template-columns: 3.95in 1fr; gap: 14px; flex: 1; min-height: 0; align-items: stretch; }
+.split-rail-wide { display: grid; grid-template-columns: 3.55in 1fr; gap: 14px; flex: 1; min-height: 0; align-items: stretch; }
+
+.card {
+  background: #ffffff; border: 1px solid #dbe2ea; border-radius: 4px;
+  padding: 11px 13px; display: flex; flex-direction: column; min-height: 0;
+}
+.card-accent { border-top: 3px solid #d94e34; }
+.card-navy { border-top: 3px solid #002b49; }
+.card-em { border-top: 3px solid #047857; }
+.card-amber { border-top: 3px solid #b45309; }
+.c-lbl {
+  font-family: 'Consolas', monospace; font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 3px;
+}
+.c-h { font-size: 14px; font-weight: 800; color: #0f172a; margin: 0 0 5px; }
+.formula {
+  background: #f1f5f9; border-left: 3px solid #002b49; padding: 6px 9px;
+  font-family: 'Consolas', monospace; font-size: 11px; font-weight: 700; color: #0f172a;
+  border-radius: 2px; margin: 5px 0; line-height: 1.4;
+}
+.pill {
+  display: inline-block; font-family: 'Consolas', monospace; font-size: 9.5px;
+  font-weight: 700; padding: 1px 6px; border-radius: 9999px; border: 1px solid;
+}
+.p-em { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.p-ac { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+.p-nv { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.p-am { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+ul.clean { margin: 4px 0 0 15px; padding: 0; font-size: 11.4px; line-height: 1.44; color: #334155; }
+ul.clean li { margin-bottom: 4px; }
+ul.tight { margin: 3px 0 0 14px; padding: 0; font-size: 10.9px; line-height: 1.38; color: #334155; }
+ul.tight li { margin-bottom: 3px; }
+code { font-family: 'Consolas', monospace; font-size: 10.5px; background: #f1f5f9; padding: 0 3px; border-radius: 2px; color: #0f172a; }
+
+.flow-row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.flow-box { flex: 1; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 8px; text-align: center; }
+.flow-box.hi { border: 2px solid #d94e34; background: #fff5f3; }
+.flow-arr { font-family: 'Consolas', monospace; font-weight: 800; color: #d94e34; font-size: 15px; }
+
+.shot-box {
+  background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px;
+  padding: 7px 9px; display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+.shot-cap {
+  font-family: 'Consolas', monospace; font-size: 9.5px; font-weight: 700; color: #002b49;
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.shot-wrap {
+  flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; overflow: hidden; padding: 3px;
+}
+.shot-wrap img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+
+.rail-stack { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.rail-stack .card { flex: 1; }
+
+.cover { background: #002b49; color: #ffffff; border-top: 6px solid #d94e34; padding: 0.58in 0.72in; }
+.cover .s-foot { border-top-color: #334155; color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<section class="slide cover">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span class="pill" style="background:#d94e34;color:#ffffff;border-color:#d94e34;font-size:10.5px;padding:3px 9px;">ANTIGRAVITY AGENT SKILL · v3.1</span>
+    <span class="mono" style="font-size:12px;color:#cbd5e1;">github.com/Jaydai99/fpa-valuechain-mc</span>
+  </div>
+
+  <div style="margin:auto 0;">
+    <div class="mono" style="font-size:12px;color:#fda4af;letter-spacing:0.12em;margin-bottom:8px;">INSTITUTIONAL EQUITY RESEARCH · 10Y FP&amp;A · VALUE-CHAIN · FAT-TAIL RISK</div>
+    <h1 style="font-size:50px;font-weight:800;margin:0;line-height:1.08;letter-spacing:-0.02em;">FPA Value Chain MC</h1>
+    <p style="font-size:18px;color:#e2e8f0;margin:14px 0 22px;max-width:1020px;line-height:1.45;">
+      An institutional 9-Phase equity analysis skill combining direct 10-year SEC EDGAR XBRL extraction, Jack Alexander FP&amp;A cost-leverage &amp; DuPont diagnostics, adversarial 10-dimension scoring, Present Value DCF, and 10,000-run Fat-Tail Monte Carlo risk modeling in a zero-CDN print-ready HTML broadsheet.
+    </p>
+
+    <div class="grid-4">
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:4px;padding:12px;">
+        <div class="mono" style="font-size:10px;color:#fda4af;">VALUATION FOUNDATION</div>
+        <div style="font-size:16px;font-weight:700;margin-top:4px;">Present Value &amp; DCF</div>
+        <div style="font-size:11.5px;color:#cbd5e1;margin-top:4px;">Unlevered FCFF · WACC Discounting · Gordon Growth TV · 5×5 Matrix</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:4px;padding:12px;">
+        <div class="mono" style="font-size:10px;color:#fda4af;">STOCHASTIC TAIL RISK</div>
+        <div style="font-size:16px;font-weight:700;margin-top:4px;">10k Fat-Tail Monte Carlo</div>
+        <div style="font-size:11.5px;color:#cbd5e1;margin-top:4px;">Student-t (df=5) + Bear Jump · P10–P90 Bands &amp; CVaR 95% Loss</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:4px;padding:12px;">
+        <div class="mono" style="font-size:10px;color:#fda4af;">PRIMARY DATA TRUTH</div>
+        <div style="font-size:16px;font-weight:700;margin-top:4px;">SEC EDGAR XBRL Engine</div>
+        <div style="font-size:11.5px;color:#cbd5e1;margin-top:4px;">Direct 10-K/10-Q API + 2-Wave Peer Search · Strict N/A Floor</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:4px;padding:12px;">
+        <div class="mono" style="font-size:10px;color:#fda4af;">LIVE PROOF CASE STUDY</div>
+        <div style="font-size:16px;font-weight:700;margin-top:4px;">NVDA Q3 FY27 Verified</div>
+        <div style="font-size:11.5px;color:#cbd5e1;margin-top:4px;">Every module captured from live SEC 8-K dashboard (14 proofs)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Methodology &amp; Complete Function Walkthrough</span>
+    <span>Slide 1 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: CORE PRINCIPLES — PV & DCF ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Introductory Methodology (1 / 3)</div>
+      <h2 class="s-title">Present Value (PV) &amp; Discounted Cash Flow (DCF) Valuation Core</h2>
+    </div>
+    <div class="s-sub">Intrinsic business value equals future unlevered free cash flows discounted back to today's dollars</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-navy">
+      <div class="c-lbl">1. Present Value (PV) Mechanics</div>
+      <h3 class="c-h">Why $1 Earned in Year 5 Is Worth Less Than $1 Today</h3>
+      <p style="font-size:11.8px;color:#334155;margin:3px 0 6px;">
+        Future cash carries opportunity cost, inflation erosion, and execution risk. Present Value discounts every projected annual Free Cash Flow to the Firm (<strong>FCFF</strong>) by the Weighted Average Cost of Capital (<strong>WACC</strong>):
+      </p>
+      <div class="formula">PV = Σ [ FCFF_t ÷ (1 + WACC)^t ] + [ TV_5 ÷ (1 + WACC)^5 ]</div>
+      <ul class="clean" style="margin-top:6px;">
+        <li><strong>Unlevered FCFF (Jack Alexander Standard):</strong> Debt-free cash flow generated by core operations before financing decisions:<br><code>FCFF = OPAT + D&amp;A − CapEx − ΔOC</code> where <code>OPAT = EBIT × (1 − Eff. Tax Rate)</code></li>
+        <li><strong>Clean Operating Capital (OC):</strong> Strictly excludes Cash, Marketable Securities, and Debt so working capital changes measure true physical business absorption (<code>AR + Inv − AP + Net PP&amp;E</code>).</li>
+        <li><strong>Gordon Growth Terminal Value:</strong> Captures steady-state value beyond Year 5:<br><code>TV_5 = FCFF_5 × (1 + g) ÷ (WACC − g)</code> using a capped sustainable growth rate <code>g</code>.</li>
+        <li><strong>Risk-Adjusted WACC:</strong> Incorporates debt/equity weights plus cyclicality, customer concentration, and geopolitical risk premia.</li>
+      </ul>
+    </div>
+
+    <div class="card card-accent">
+      <div class="c-lbl">2. Jack Alexander DCF Engine (Tables 22.1 &amp; 22.2)</div>
+      <h3 class="c-h">Auditable Bridge From Operating Cash Flows to Per-Share Fair Value</h3>
+      <p style="font-size:11.8px;color:#334155;margin:3px 0 6px;">
+        Phase 6 translates explicit 5-year projections into implied equity value per diluted share through a transparent 6-step bridge, cross-checked across 25 discount-rate and terminal-growth combinations:
+      </p>
+      <div class="flow-row">
+        <div class="flow-box"><div class="c-lbl">PV 5Y FCFF</div><strong class="mono" style="font-size:12.5px;">Σ PV(Y1–Y5)</strong></div>
+        <div class="flow-arr">+</div>
+        <div class="flow-box"><div class="c-lbl">PV Terminal</div><strong class="mono" style="font-size:12.5px;">PV(TV_5)</strong></div>
+        <div class="flow-arr">=</div>
+        <div class="flow-box"><div class="c-lbl">Enterprise Val</div><strong class="mono" style="font-size:12.5px;">Implied EV</strong></div>
+      </div>
+      <div class="flow-row" style="margin-bottom:8px;">
+        <div class="flow-box"><div class="c-lbl">+ Cash &amp; MS</div><strong class="mono" style="font-size:12.5px;">Liquid Cash</strong></div>
+        <div class="flow-arr">−</div>
+        <div class="flow-box"><div class="c-lbl">Debt + Leases + NCI</div><strong class="mono" style="font-size:12.5px;">Senior Claims</strong></div>
+        <div class="flow-arr">=</div>
+        <div class="flow-box hi"><div class="c-lbl">Fair Value / Sh</div><strong class="mono" style="font-size:12.5px;">Eq ÷ Diluted Sh</strong></div>
+      </div>
+      <ul class="clean">
+        <li><strong>Table 22.2 (5×5 Sensitivity Matrix):</strong> Grids <code>WACC (±50 / ±100 bps)</code> against <code>Terminal g (±50 / ±100 bps)</code> and publishes explicit sensitivity deltas (e.g., <code>Δ Value per +100 bps WACC</code>).</li>
+        <li><strong>Zero Conflation Tagging:</strong> Historical tax rate &amp; balance sheet cash/debt carry <span class="pill p-em">[FILING]</span>; all Y1–Y5 margins, WACC, and terminal <code>g</code> carry <span class="pill p-ac">[ASSUMP]</span>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Core Valuation Principles: Present Value &amp; DCF</span>
+    <span>Slide 2 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: CORE PRINCIPLES — FAT-TAIL MONTE CARLO ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Introductory Methodology (2 / 3)</div>
+      <h2 class="s-title">10,000-Run Fat-Tail Monte Carlo &amp; Expected Shortfall (CVaR 95%)</h2>
+    </div>
+    <div class="s-sub">Replacing fragile single-point target prices with a 10,000-scenario probability distribution</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card card-navy">
+      <div class="c-lbl">Why Stochastic Simulation?</div>
+      <h3 class="c-h">10,000 Simulated 5-Year Futures</h3>
+      <p style="font-size:11.6px;color:#334155;margin:2px 0 6px;">
+        Deterministic DCF produces a single number (e.g., <code>$166.59</code>) that hides sensitivity to margin compression, CapEx pauses, and cost-of-capital shocks. The client-side Monte Carlo engine draws 10,000 independent paths:
+      </p>
+      <div class="formula">g_y = max(−35%, μ + σ·z + BearJump_y)<br>WACC_i = max(g+2%, N(WACC, 0.8%))</div>
+      <ul class="clean" style="margin-top:6px;">
+        <li><strong>5 Real-Time Parameter Sliders:</strong> Interactively stress-test <code>Base FCFF</code>, <code>Mean 5Y CAGR</code>, <code>Volatility (σ)</code>, <code>WACC</code>, and <code>Terminal g</code> directly in the browser.</li>
+        <li><strong>24-Bin Histogram Visualization:</strong> Plots the full probability curve, highlighting the worst 5% CVaR tail in red and current market price bin in coral.</li>
+      </ul>
+    </div>
+
+    <div class="card card-accent">
+      <div class="c-lbl">Fat-Tail vs. Normal Curves</div>
+      <h3 class="c-h">Student-t (df=5) + 10% Bear Jump</h3>
+      <p style="font-size:11.6px;color:#334155;margin:2px 0 6px;">
+        Real equity cash flows exhibit skewness and severe drawdowns that thin-tailed Gaussian bell curves systematically underestimate. Default simulation mode uses institutional <strong>Fat-Tail</strong> mechanics:
+      </p>
+      <ul class="clean">
+        <li><strong>Student-t Distribution (df = 5):</strong> Rescaled heavy-tailed shocks generate realistic extreme growth surges and cyclical contractions across Y1–Y5.</li>
+        <li><strong>10% Probability Bear Jump (−22% Year-1 Shock):</strong> Injects sudden structural shocks (hyperscaler digestion, tariff shock, or margin reset) into 1 in 10 futures.</li>
+        <li><strong>Instant Distribution Toggle:</strong> One-click switch compares <em>Fat-Tail Student-t + Jump</em> against <em>Gaussian Box-Muller</em> to expose model-risk spread.</li>
+      </ul>
+    </div>
+
+    <div class="card card-em">
+      <div class="c-lbl">Actionable Decision Outputs</div>
+      <h3 class="c-h">Quantiles, Prob &gt; Price &amp; CVaR 95%</h3>
+      <p style="font-size:11.6px;color:#334155;margin:2px 0 6px;">
+        Rather than guessing conviction, 10,000 simulated equity values map directly into capital-allocation guardrails:
+      </p>
+      <ul class="clean">
+        <li><strong>Quantile Laddering (P10–P90):</strong> <code>P10–P25</code> defines Deep Margin of Safety accumulation; <code>P50</code> marks stress median; <code>&gt;P75</code> flags priced-for-perfection trims.</li>
+        <li><strong>Prob &gt; Market Price (%):</strong> Exact percentage of the 10,000 futures in which intrinsic value exceeds today's share price (<code>&gt;55–75%</code> favors entry).</li>
+        <li><strong>CVaR 95% (Expected Shortfall):</strong> Average value of the <strong>worst 500 runs (bottom 5%)</strong>, translated directly into dollar drawdown on a <strong>$10,000</strong> stake.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Core Risk Principles: Stochastic Valuation &amp; CVaR 95%</span>
+    <span>Slide 3 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: CORE PRINCIPLES 3 & EXECUTION WORKFLOW ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Introductory Methodology &amp; Architecture (3 / 3)</div>
+      <h2 class="s-title">FP&amp;A Cost Leverage, DuPont ROE, Epistemic Rigor &amp; Execution Engine</h2>
+    </div>
+    <div class="s-sub">Accounting verification, value-chain economics, and single-pass execution without CDN dependencies</div>
+  </div>
+
+  <div class="body-area">
+    <div class="grid-3">
+      <div class="card card-navy">
+        <div class="c-lbl">FP&amp;A Cost &amp; Capital Mechanics</div>
+        <h3 class="c-h">CVP (FC/VC), DOL &amp; 3-Step DuPont</h3>
+        <ul class="tight">
+          <li><strong>CVP Proxy:</strong> Separates Variable COGS from Fixed/Semi-Fixed OpEx to compute <strong>Break-Even Sales</strong> and <strong>Margin of Safety (%)</strong>.</li>
+          <li><strong>Empirical DOL:</strong> <code>%ΔEBIT ÷ %ΔSales</code> reveals operating profit sensitivity; paired with <code>CapEx/D&amp;A</code> &amp; <code>CCC</code>.</li>
+          <li><strong>3-Step DuPont ROE:</strong> <code>Net Margin × Asset Turnover × Equity Multiplier</code> exposes whether ROE comes from moat quality or debt leverage.</li>
+          <li><strong>Owner FCF:</strong> <code>Std FCF − NCI − SBC</code> isolates real cash left after stock-based dilution.</li>
+        </ul>
+      </div>
+
+      <div class="card card-em">
+        <div class="c-lbl">Epistemic Discipline &amp; Rubric</div>
+        <h3 class="c-h">Provenance Tags &amp; Zero Fabrication</h3>
+        <ul class="tight">
+          <li><strong>Mandatory Provenance Tags:</strong> <span class="pill p-em">[FILING]</span> <span class="pill p-nv">[CONSENSUS]</span> <span class="pill p-am">[PROXY]</span> <span class="pill p-ac">[ASSUMP]</span> <span class="pill p-ac">[SIM]</span> never mix observed accounting truth with assumptions.</li>
+          <li><strong>Strict "N/A" Floor:</strong> Any undisclosed internal split (<code>FC/VC</code>, <code>OHC</code>, <code>PVM</code>, <code>NRR</code>, <code>Util%</code>) is explicitly flagged <code>N/A</code> rather than fabricated.</li>
+          <li><strong>Objective 10-Dim Rubric (0–100):</strong> Deterministic score thresholds replace qualitative labels:<br><code>≥78 &amp; Duan ≥2.5 = PASS</code> | <code>62–77 = COND</code> | <code>&lt;45 = FAIL</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card card-accent">
+        <div class="c-lbl">Single-Pass Engineering</div>
+        <h3 class="c-h">Zero-CDN Broadsheet Renderer</h3>
+        <ul class="tight">
+          <li><strong>Pure HTML/CSS + Inline SVG:</strong> Zero Chart.js, zero external fonts/CDNs — opens offline and prints cleanly to A4 Landscape PDF.</li>
+          <li><strong>Single <code>DATA</code> Payload (≤450 JS Lines):</strong> Keeps all historical schedules, peers, rubric rows, DCF inputs, and live Monte Carlo decoupled and fast.</li>
+          <li><strong>3-Path Execution Speed:</strong> US SEC pre-flight Python API + max 2 web search waves + optional uploaded filings/CSV prevents timeout bloat.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card card-navy" style="flex:0 0 auto;padding:9px 13px;">
+      <div class="c-lbl">End-to-End Execution Pipeline: 3-Path Data Ingestion → 9-Phase Analytical Engine → Print-Ready Broadsheet</div>
+      <div class="flow-row" style="margin:4px 0 0;">
+        <div class="flow-box hi"><div class="c-lbl">US Pre-Flight API</div><div style="font-size:10.8px;font-weight:700;">fetch_sec_edgar.py</div><div style="font-size:9.5px;color:#475569;">10Y + Qtr XBRL JSON</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box"><div class="c-lbl">P1</div><div style="font-size:10.8px;font-weight:700;">Verdict &amp; Gate</div><div style="font-size:9.5px;color:#475569;">8-K + Arithmetic</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box"><div class="c-lbl">P2 &amp; P2.2</div><div style="font-size:10.8px;font-weight:700;">10Y, CVP, DuPont</div><div style="font-size:9.5px;color:#475569;">Value-Chain &amp; Suite</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box"><div class="c-lbl">P3–P5</div><div style="font-size:10.8px;font-weight:700;">ML, Forces, Rubric</div><div style="font-size:9.5px;color:#475569;">4-Masters &amp; 10-Dim</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box hi"><div class="c-lbl">P6</div><div style="font-size:10.8px;font-weight:700;">DCF &amp; 10k MC</div><div style="font-size:9.5px;color:#475569;">Table 22.1/22.2 &amp; CVaR</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-box"><div class="c-lbl">P7–P9</div><div style="font-size:10.8px;font-weight:700;">Audit, AI, Synthesis</div><div style="font-size:9.5px;color:#475569;">Triggers &amp; Thesis</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Core FP&amp;A Rules, Epistemic Governance &amp; Pipeline Overview</span>
+    <span>Slide 4 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: FUNCTION 1 (PHASE 1A) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (1 / 12) · Phase 1A</div>
+      <h2 class="s-title">Navigation Bar, Provenance Strip &amp; Dual-Layer Executive Verdict</h2>
+    </div>
+    <div class="s-sub">Instant print-ready navigation, filing-grade metadata, and plain-English + institutional verdicts</div>
+  </div>
+
+  <div class="split-rail">
+    <div class="rail-stack">
+      <div class="card card-navy">
+        <div class="c-lbl">Function 1.1 · Top TOC &amp; Print Controls</div>
+        <h3 class="c-h">Static Phase Index &amp; PDF Export</h3>
+        <ul class="tight">
+          <li><strong>Zero-Sticky Static Navigation:</strong> One-click anchors (<code>#phase-1</code> to <code>#phase-9</code>) stripped automatically inside <code>@media print</code>.</li>
+          <li><strong>Print-to-PDF Action Bar:</strong> Instant browser export formatted to A4 Landscape pages with clean page breaks.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Function 1.2 · 6-Cell Provenance Strip</div>
+        <h3 class="c-h">Data Grade &amp; Explicit N/A Audit</h3>
+        <ul class="tight">
+          <li>Locks primary SEC filing timestamps (Nov 17, 2026 8-K + XBRL), latest LTM cutoff, currency/GAAP basis, exact share count, and upfront <code>N/A</code> field declarations.</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="c-lbl">Function 1.3 · Dual-Layer Opener</div>
+        <h3 class="c-h">Owner Intuition + Institutional Proof</h3>
+        <ul class="tight">
+          <li><strong>Layer 1 (5-Line Business Owner Brief):</strong> Explains product moat, free cash per $100 sold ($41.09), <code>$10,000</code> risk pain, bottleneck, and clear action zone without jargon.</li>
+          <li><strong>Layer 2 (Institutional FP&amp;A Verdict):</strong> Ties <code>80/100 PASS</code>, Q3 beats, OPAT, ROIC, DuPont ROE, Base DCF (<code>$166.59</code>), and Stress MC (<code>~$156.6</code>) with strict tags.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-1 Top Nav, Provenance Strip &amp; Dual-Layer Verdict</span>
+        <span class="pill p-em">NVDA Q3 FY27 PROOF</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_01_p1_verdict.png" alt="Phase 1 Navigation, Provenance Strip and Dual-Layer Verdict Banner">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 1: Executive Opener, Provenance &amp; Print Controls</span>
+    <span>Slide 5 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: FUNCTION 2 (PHASE 1B) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (2 / 12) · Phase 1B</div>
+      <h2 class="s-title">Live Earnings Beat Verification &amp; Accounting Identity Gate</h2>
+    </div>
+    <div class="s-sub">Mandatory mathematical reconciliation before unlocking historical schedules or valuation models</div>
+  </div>
+
+  <div class="split-rail">
+    <div class="rail-stack">
+      <div class="card card-accent">
+        <div class="c-lbl">Function 1.4 · Earnings-vs-Consensus Tracker</div>
+        <h3 class="c-h">Post-Print Variance &amp; Guidance Watch</h3>
+        <ul class="tight">
+          <li><strong>5-Point Post-Earnings Scorecard:</strong> Benchmarks reported Form 8-K revenue (<code>$115.84B</code>, <code>+103% YoY</code>), EPS (<code>$2.68</code>), cash conversion rebound (<code>$43.78B FCF</code>), Q4 outlook (<code>$130B</code> vs <code>71–72%</code> GM warning), and market price convergence (<code>$163.10 AH</code>).</li>
+        </ul>
+      </div>
+      <div class="card card-navy">
+        <div class="c-lbl">Function 1.5 · Accounting Identity Gate</div>
+        <h3 class="c-h">Deterministic Filing Math Reconciliation</h3>
+        <ul class="tight">
+          <li><strong>Arithmetic Checks (&lt;0.1% Tolerance):</strong> Forces <code>GP − R&amp;D − SG&amp;A = EBIT ($239,090M)</code>, diluted Market Cap, Cash + DebtSec (<code>$53.51B</code>), Debt + Leases (<code>$38.15B</code>), and Implied EV (<code>$3,929.38B</code>) to balance to the dollar.</li>
+          <li>Assigns overall Data Richness Grade (<code>Grade A</code>) prior to forecasting.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Function 1.6 · 6-KPI Executive Summary Strip</div>
+        <h3 class="c-h">LTM Cash, ROIC, DuPont &amp; Live MC Link</h3>
+        <ul class="tight">
+          <li>Auto-syncs KPI #6 (<code>MC P50</code>, <code>Prob &gt; Price</code>, <code>CVaR 95%</code>) dynamically whenever the Phase 6 Monte Carlo simulator updates.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-1 Q3 Beat Tracker, Identity Gate &amp; 6 KPI Cards</span>
+        <span class="pill p-nv">VERIFIED GRADE A</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_02_p1_q3_gate.png" alt="Phase 1 Q3 Beat Verification and Accounting Identity Gate">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 2: Earnings Verification &amp; Accounting Gate</span>
+    <span>Slide 6 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: FUNCTION 3 (PHASE 2A) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (3 / 12) · Phase 2A</div>
+      <h2 class="s-title">10-Year SEC EDGAR XBRL Schedule &amp; FP&amp;A Commercial Drivers</h2>
+    </div>
+    <div class="s-sub">Automated FY17–FY26 10-K + Q3 LTM ledger paired with working capital, CapEx ROI &amp; workforce cards</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-navy">
+        <div class="c-lbl">Function 2.1 · fetch_sec_edgar.py Extractor</div>
+        <h3 class="c-h">Direct XBRL JSON + YTD Differencing</h3>
+        <ul class="tight">
+          <li>Pulls 10 years of SEC <code>companyfacts</code> via CIK lookup, normalizing multi-tag US-GAAP aliases across Revenue, GP, R&amp;D, SG&amp;A, EBIT, Taxes, D&amp;A, SBC, CFO, CapEx, Assets, Equity, AR, Inventory &amp; AP.</li>
+          <li>Automatically computes true standalone quarterly figures via YTD differencing to form an audit-ready LTM column (<code>Q3'27</code>).</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Function 2.2 · Jack Alexander FP&amp;A Metrics</div>
+        <h3 class="c-h">OPAT, Owner FCF &amp; Capital Cycle</h3>
+        <ul class="tight">
+          <li>Computes annual <strong>Empirical DOL</strong> (<code>1.23x</code> LTM), <strong>OPAT</strong> (<code>$199.7B</code>), <strong>CapEx/D&amp;A</strong> (<code>2.43x</code> growth expansion), <strong>Std vs. Owner FCF</strong> (net of <code>$7.7B</code> SBC), <strong>Interest Coverage</strong>, and <strong>Cash Conversion Cycle (CCC)</strong>.</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="c-lbl">Function 2.3 · 4 Diagnostic Driver Cards</div>
+        <h3 class="c-h">WC Liquidity, CapEx, CVP &amp; Workforce</h3>
+        <ul class="tight">
+          <li>Summarizes Q3 Operating Capital build (<code>$99.7B</code>), LTM cash conversion, break-even cushion, <code>$8.61M Rev/Emp</code> productivity, and flags undisclosed <code>PVM / Book-to-Bill / NRR / Util%</code> as <code>N/A</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-2 10-Year Historical FP&amp;A Ledger (FY17–LTM Q3'27) &amp; 4 Driver Cards</span>
+        <span class="pill p-em">[FILING XBRL + 8-K]</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_03_p2_10y_table.png" alt="Phase 2 10-Year SEC XBRL Historical Schedule and KPI Cards">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 3: 10-Year Historical Schedule &amp; Commercial Drivers</span>
+    <span>Slide 7 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: FUNCTION 4 (PHASE 2B) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (4 / 12) · Phase 2B</div>
+      <h2 class="s-title">CVP Cost Structure (FC / VC / DOL) &amp; Interactive Scale/Margin Charts</h2>
+    </div>
+    <div class="s-sub">Decomposing cost absorption, break-even safety buffer, and pure-CSS competitor bar comparisons</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-amber">
+        <div class="c-lbl">Function 2.4 · Cost-Volume-Profit Engine</div>
+        <h3 class="c-h">Stacked VC Proxy / FC / EBIT Profile</h3>
+        <ul class="tight">
+          <li><strong>LTM Revenue Split:</strong> Visualizes Variable Cost proxy (<code>25.1% COGS</code>), Fixed/Semi-Fixed OpEx (<code>8.8% R&amp;D+SG&amp;A</code>), and Operating Profit (<code>66.1% EBIT</code>).</li>
+          <li><strong>Safety Cushion:</strong> Computes annual <strong>Break-Even Sales</strong> (<code>OpEx ÷ CM% = $42.68B/yr</code>) and <strong>88.20% Margin of Safety</strong>.</li>
+          <li><strong>Trend Guard:</strong> Flags Q4 memory/Rubin compression warning while documenting Q3 QoQ DOL at <code>1.06x</code>.</li>
+        </ul>
+      </div>
+      <div class="card card-navy">
+        <div class="c-lbl">Function 2.5 · Dual Interactive Comparison Charts</div>
+        <h3 class="c-h">Graph 1 ($B Scale) &amp; Graph 2 (% Efficiency)</h3>
+        <ul class="tight">
+          <li><strong>3-View Segmented Toggles:</strong> Dynamically switch between <em>Direct Competitors</em> (<code>AVGO, AMD, INTC</code>), <em>Competitors + Suppliers</em> (<code>+ TSM, SK Hynix</code>), or <em>NVDA 10-Year Series</em>.</li>
+          <li><strong>Zero-Canvas Pure CSS Flexbox Bars:</strong> Compares Revenue, EBIT, FCF, CapEx, Gross/EBIT/FCF Margins, CapEx/Sales, and <code>ROIC %</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-2 CVP Stacked Breakdown Table + Graph 1 ($B) &amp; Graph 2 (%)</span>
+        <span class="pill p-am">88.2% MARGIN OF SAFETY</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_04_p2_cvp_charts.png" alt="Phase 2 CVP Cost Structure Table and Dual Comparison Bar Charts">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 4: CVP Cost Leverage &amp; Dual Comparison Charts</span>
+    <span>Slide 8 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: FUNCTION 5 (PHASE 2.2A & 2.2B) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (5 / 12) · Phase 2.2A &amp; 2.2B</div>
+      <h2 class="s-title">Interactive 3-Step DuPont ROE Tree &amp; Value-Chain Chokepoint Map</h2>
+    </div>
+    <div class="s-sub">Live slider decomposition of capital returns paired with upstream foundry/memory bottleneck mapping</div>
+  </div>
+
+  <div class="body-area">
+    <div class="grid-2" style="flex:0 0 auto;">
+      <div class="card card-navy" style="padding:8px 12px;">
+        <div class="c-lbl">Function 2.2A · Interactive 3-Step DuPont Return Tree</div>
+        <p style="font-size:11px;color:#334155;margin:0;line-height:1.4;">
+          Decomposes ROE into <code>Net Margin (62.50%) × Asset Turnover (0.980x) × Equity Multiplier (1.400x) = 85.75%</code> (unlevered ROA <code>61.25%</code>). Entity pills snap live to filings for NVDA, AVGO, AMD, INTC, TSMC, and SK Hynix, while sliders enable real-time sensitivity what-ifs.
+        </p>
+      </div>
+      <div class="card card-accent" style="padding:8px 12px;">
+        <div class="c-lbl">Function 2.2B · Tiered Supply Chain &amp; Peer Topology Map</div>
+        <p style="font-size:11px;color:#334155;margin:0;line-height:1.4;">
+          Maps upstream manufacturing tollbooths (<code>ASML Lithography → TSMC CoWoS + SK Hynix HBM4 → NVDA CUDA Focal Node → Hyperscalers</code>) in Tier A directly against horizontal silicon rivals (<code>Broadcom, AMD, Intel</code>) in Tier B.
+        </p>
+      </div>
+    </div>
+
+    <div class="shot-box" style="flex:1;">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-2-2A Interactive DuPont Sliders/Tree &amp; #phase-2-2B Value-Chain Chokepoint Map</span>
+        <span class="pill p-ac">DUPONT ROE 85.75%</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_05_p22_dupont_vc.png" alt="Phase 2.2 Interactive 3-Step DuPont ROE Tree and Value Chain Map">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 5: DuPont ROE Tree &amp; Value-Chain Topology</span>
+    <span>Slide 9 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: FUNCTION 6 (PHASE 2.2C BENCHMARKING MATRIX) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (6 / 12) · Phase 2.2C</div>
+      <h2 class="s-title">Industry Benchmarking Matrix vs. Real-World Operational Standards</h2>
+    </div>
+    <div class="s-sub">Comparing target vs. 3 competitors, 2 chokepoint suppliers &amp; industry baseline with HIGH / LOW impact tags</div>
+  </div>
+
+  <div class="body-area">
+    <div class="shot-box" style="flex:0 0 3.72in;">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-2-2C Peer &amp; Supplier Benchmarking Matrix with Operational Impact Badges</span>
+        <span class="pill p-nv">6 COMPANIES + INDUSTRY PROXY</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_06_p22_peers_matrix.png" alt="Phase 2.2C Peer and Supplier Benchmarking Matrix">
+      </div>
+    </div>
+
+    <div class="grid-3" style="flex:1;">
+      <div class="card card-em">
+        <div class="c-lbl">1. Mandatory Operational Badges</div>
+        <p style="font-size:11.2px;color:#334155;margin:0;line-height:1.42;">
+          Every metric pairs a color-coded <span class="pill p-em">HIGH</span> / <span class="pill p-am">LOW</span> operational impact badge with plain-English causality explaining overhead absorption (<code>OHC/FC</code>) and pricing strength.
+        </p>
+      </div>
+      <div class="card card-navy">
+        <div class="c-lbl">2. CapEx Offload &amp; Moat Verification</div>
+        <p style="font-size:11.2px;color:#334155;margin:0;line-height:1.42;">
+          Benchmarks capital intensity across the chain: NVDA spends just <code>2.8% CapEx/Sales</code> while offloading <code>~$54B/yr</code> combined foundry &amp; HBM fab outlays onto TSMC and SK Hynix.
+        </p>
+      </div>
+      <div class="card card-accent">
+        <div class="c-lbl">3. CCC, Talent &amp; Valuation Gaps</div>
+        <p style="font-size:11.2px;color:#334155;margin:0;line-height:1.42;">
+          Flags working-capital bottlenecks (<code>125d DIO / 133d CCC</code> during Blackwell → Vera Rubin cutover) beside <code>$5.14M Rev/Emp</code> productivity vs. AVGO, AMD, and INTC.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 6: Industry &amp; Supplier Benchmarking Matrix</span>
+    <span>Slide 10 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 11: FUNCTION 7 (PHASE 2.2D CONSULTING VISUAL SUITE) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (7 / 12) · Phase 2.2D</div>
+      <h2 class="s-title">Consulting Visual Suite: Annual Patterns A, B &amp; C (Zero-CDN Engine)</h2>
+    </div>
+    <div class="s-sub">Institutional slide-ready multi-company charts built with pure CSS gradients &amp; inline SVG polylines</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-accent">
+        <div class="c-lbl">Pattern A · 6-Company Step-Bridge</div>
+        <h3 class="c-h">Annual Scale + Hatched FC27E Consensus</h3>
+        <ul class="tight">
+          <li>Six uniform panels (Target + 3 Competitors + 2 Suppliers) render solid FY22–FY26 CSS bars alongside hatched consensus <code>FC27E</code> bars (or <code>N/A</code> if undisclosed).</li>
+          <li>Interactive buttons switch live across <em>Revenue / EBIT / CapEx ($B)</em> while surfacing each firm's 5Y CAGR pill.</li>
+        </ul>
+      </div>
+      <div class="card card-navy">
+        <div class="c-lbl">Pattern B · Indexed Trajectory (2021 = 100)</div>
+        <h3 class="c-h">Inline SVG Polylines + Dark-Navy Table</h3>
+        <ul class="tight">
+          <li>Plots multi-year compounding separation directly (<code>NVDA 100 → 1,295</code> vs. <code>AVGO 233</code>, <code>TSM 214</code>, <code>AMD 211</code>) next to an institutional summary ledger.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Pattern C · YoY Slope &amp; Trajectory</div>
+        <h3 class="c-h">Prior vs. Latest + Multi-Year Strip</h3>
+        <ul class="tight">
+          <li>Compares direct competitors row-by-row on prior vs. latest FY sales, embedded EBIT margin shift, and multi-year bar expansion.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-2-2D Consulting Visual Suite (Patterns A, B &amp; C)</span>
+        <span class="pill p-em">ANNUAL DATA ONLY · ZERO CHART.JS</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_07_p22_consulting_suite.png" alt="Phase 2.2D Consulting Visual Suite Patterns A B and C">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 7: Consulting Visual Suite (Patterns A, B, C)</span>
+    <span>Slide 11 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 11: FUNCTION 7 (PHASE 3 & PHASE 4) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (8 / 12) · Phase 3 &amp; Phase 4</div>
+      <h2 class="s-title">Time-Series ML Forecast, Forensic Diagnostics &amp; Force Alignment</h2>
+    </div>
+    <div class="s-sub">Statistical growth-regime testing, accounting quality checks, and 6-factor strategic scoring</div>
+  </div>
+
+  <div class="body-area">
+    <div class="split-rail-wide" style="flex:1.05;">
+      <div class="card card-navy">
+        <div class="c-lbl">Function 3 · Time-Series ML &amp; Forensics</div>
+        <h3 class="c-h">Holt-Winters Taper &amp; Accrual Alerts</h3>
+        <ul class="tight">
+          <li><strong>4 Forensic KPIs:</strong> Measures 10Y growth regime (<code>46.6% CAGR, R² 0.78</code>), <code>Altman Z</code> &amp; net cash headroom, <code>Sloan Accrual Ratio (+0.084)</code>, and Working Capital divergence (<code>DIO 125d, AR $38.5B→$81B</code>).</li>
+          <li><strong>5Y Damped Holt-Winters Forecast:</strong> Generates tapering Y1–Y5 revenue projections alongside Cross-Value-Chain ROE bars.</li>
+        </ul>
+      </div>
+      <div class="shot-box">
+        <div class="shot-cap">
+          <span>Live Capture · #phase-3 Forensic KPI Cards, Holt-Winters 5Y Bars &amp; Cross-Chain ROE</span>
+          <span class="pill p-am">SLOAN +0.084 WATCH</span>
+        </div>
+        <div class="shot-wrap">
+          <img src="../examples/nvda/shot_08_p3_ml_forensics.png" alt="Phase 3 Time Series ML and Forensic Accounting Diagnostics">
+        </div>
+      </div>
+    </div>
+
+    <div class="split-rail-wide" style="flex:1;">
+      <div class="card card-accent">
+        <div class="c-lbl">Function 4 &amp; 5A · Force Matrix + 4-Masters</div>
+        <h3 class="c-h">External/Internal Alignment (−2 to +2)</h3>
+        <ul class="tight">
+          <li><strong>6-Dimension Force Table:</strong> Quantifies Macro/FX/Tariffs (<code>+0.5</code>), Supply/Demand Cycle (<code>+1.0</code>), Geopolitics (<code>−0.5</code>), Pricing Moat (<code>+2.0</code>), Capital ROI (<code>+2.0</code>), and Governance/WC (<code>+1.0</code>) with ASCII gauges.</li>
+          <li>Directly feeds the <strong>4-Masters Committee</strong> shown directly below.</li>
+        </ul>
+      </div>
+      <div class="shot-box">
+        <div class="shot-cap">
+          <span>Live Capture · #phase-4 Force Alignment Matrix &amp; #phase-5A 4-Masters Committee</span>
+          <span class="pill p-nv">4-MASTERS: 4.45 / 5.00</span>
+        </div>
+        <div class="shot-wrap">
+          <img src="../examples/nvda/shot_09_p4_forces_p5_masters.png" alt="Phase 4 Force Alignment and Phase 5A 4 Masters Adversarial Debate">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 7: Time-Series ML, Forensics &amp; Force Alignment</span>
+    <span>Slide 12 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 12: FUNCTION 8 (PHASE 5B RUBRIC) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (9 / 12) · Phase 5A &amp; Phase 5B</div>
+      <h2 class="s-title">4-Masters Adversarial Committee &amp; 10-Dimension Objective Rubric</h2>
+    </div>
+    <div class="s-sub">Banning gut-feel scores: deterministic numeric cutoffs + hard Veto rule across 10 dimensions</div>
+  </div>
+
+  <div class="body-area">
+    <div class="grid-3" style="flex:0 0 auto;">
+      <div class="card card-accent" style="padding:9px 12px;">
+        <div class="c-lbl">Adversarial Veto Governance</div>
+        <p style="font-size:11px;color:#334155;margin:0;line-height:1.4;">
+          <strong>Duan Yongping (30% weight):</strong> Score <code>&lt;2.5</code> triggers automatic <strong>VETO (FAIL)</strong> regardless of DCF upside. <strong>Buffett (30%)</strong> audits moat/ROIC, <strong>Munger (20%)</strong> lists Top-3 Fatal Risks with probabilities, and <strong>Li Lu (20%)</strong> sizes distress entry points.
+        </p>
+      </div>
+      <div class="card card-navy" style="padding:9px 12px;">
+        <div class="c-lbl">Strict Numeric Cutoffs (10 × 10 = 100 Pts)</div>
+        <p style="font-size:11px;color:#334155;margin:0;line-height:1.4;">
+          Each row enforces fixed quantitative bands (e.g., <code>ROIC − WACC &gt;10% → 9–10 pts</code>; <code>Owner FCF/OPAT 50–75% → 3–5 pts</code>; <code>Net Cash → 9–10 pts</code>; <code>MC Prob 35–55% → 3–5 pts</code>). No subjective overrides allowed.
+        </p>
+      </div>
+      <div class="card card-em" style="padding:9px 12px;">
+        <div class="c-lbl">Deterministic Verdict Gate</div>
+        <p style="font-size:11px;color:#334155;margin:0;line-height:1.4;">
+          <code>≥78 &amp; Duan ≥2.5</code> = <strong>PASS</strong><br>
+          <code>62–77</code> = <strong>CONDITIONAL PASS</strong> | <code>45–61</code> = <strong>GREY ZONE</strong><br>
+          <code>&lt;45 or Duan &lt;2.5</code> = <strong>FAIL</strong> (NVDA scores <strong>80 / 100 PASS</strong>).
+        </p>
+      </div>
+    </div>
+
+    <div class="shot-box" style="flex:1;">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-5B Full 10-Dimension Quantitative Scoring Rubric Table (NVDA 80 / 100 PASS)</span>
+        <span class="pill p-em">ZERO SUBJECTIVE GUESSING</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_10_p5_rubric.png" alt="Phase 5B 10-Dimension Objective Scoring Rubric Table">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 9: 4-Masters Veto &amp; 10-Dimension Objective Rubric</span>
+    <span>Slide 13 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 13: FUNCTION 9 (PHASE 6A DCF & MONTE CARLO) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (10 / 12) · Phase 6A</div>
+      <h2 class="s-title">Jack Alexander DCF (Tables 22.1 &amp; 22.2) &amp; Live 10k Fat-Tail Monte Carlo</h2>
+    </div>
+    <div class="s-sub">Explicit 5-year unlevered cash-flow present value schedule + interactive stochastic simulation</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-navy">
+        <div class="c-lbl">Function 6.1 · Table 22.1 &amp; EV Bridge</div>
+        <h3 class="c-h">Y1–Y5 Explicit FCFF → $166.59 Base</h3>
+        <ul class="tight">
+          <li>Projects Y1–Y5 Sales, EBIT fade (<code>59.5%→55%</code>), OPAT (<code>t=16.46%</code>), FCFF (<code>$196.6B→$281.8B</code>), and discounted PV @ <code>9.5%</code> WACC.</li>
+          <li><strong>EV-to-Equity Bridge:</strong> Sums <code>PV FCFF ($926.3B) + PV TV ($3,087.5B) + Q3 Cash ($53.5B) − Debt ($38.2B)</code> ÷ <code>24.19B shares</code>.</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="c-lbl">Function 6.2 · Table 22.2 5×5 Matrix</div>
+        <h3 class="c-h">WACC × Terminal g Sensitivity</h3>
+        <ul class="tight">
+          <li>Highlights Base <code>$166.59</code> and measures exact dollar impact: <code>+100 bps WACC: −$24.12/sh</code> and <code>−100 bps g: −$19.29/sh</code>.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Function 6.3 · Live 10k Monte Carlo Engine</div>
+        <h3 class="c-h">Sliders, Mode Toggle &amp; 24-Bin Histogram</h3>
+        <ul class="tight">
+          <li>Interactive browser JavaScript runs 10,000 draws in milliseconds under <code>Fat-Tail Student-t</code> or <code>Gaussian</code>, printing <code>CVaR 95% ($84.2)</code>, <code>P5–P95</code>, and <code>Prob &gt; $163.1 (44.7%)</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-6 Table 22.1, EV Bridge, Table 22.2 &amp; Live 10k Fat-Tail Monte Carlo</span>
+        <span class="pill p-ac">BASE $166.59 · MC P50 $157.0 · CVAR $84.2</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_11_p6_dcf_mc.png" alt="Phase 6 Jack Alexander DCF Tables and 10k Fat Tail Monte Carlo">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 10: DCF Valuation &amp; Interactive Monte Carlo Engine</span>
+    <span>Slide 14 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 14: FUNCTION 10 (PHASE 6B & PHASE 7) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (11 / 12) · Phase 6B &amp; Phase 7</div>
+      <h2 class="s-title">3-Tier Action Zones, $10k Downside Stress Check &amp; 10-Point Self-Audit</h2>
+    </div>
+    <div class="s-sub">Translating percentiles into disciplined entry prices while auditing every accounting &amp; epistemic gate</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-accent">
+        <div class="c-lbl">Function 6.4 · Capital Sizing &amp; Mirror Test</div>
+        <h3 class="c-h">Action Zones &amp; $10,000 Stress Math</h3>
+        <ul class="tight">
+          <li><strong>3-Tier Allocation Bands:</strong> Separates Deep Margin of Safety (<code>P10–P25: $108–$129</code>), Core Pullback Entry (<code>P30–P50: $138–$156.6</code>), and Trim/Hold Zone (<code>&gt;P75: &gt;$190</code>).</li>
+          <li><strong>$10k Real-Money Check:</strong> Quantifies portfolio drawdown at <code>P50 (−$399)</code> vs. 5%-tail <code>CVaR 95% (−$4,850)</code>.</li>
+          <li><strong>5-Sentence Mirror Test:</strong> Enforces adversarial humility on Q4 GM fade and working capital velocity.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Function 7 · Mandatory 10-Point Audit Gate</div>
+        <h3 class="c-h">Zero-Skip Pre-Output Verification</h3>
+        <ul class="tight">
+          <li>Verifies OPAT tax math, Cash/Debt exclusion in OC, <code>CapEx &gt; D&amp;A</code> realism, EV bridge integrity, P50 divergence explanation, geopolitical WACC risk, epistemic tags, rubric arithmetic, zero-CDN CSS, and <code>N/A</code> compliance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shot-box">
+      <div class="shot-cap">
+        <span>Live Capture · #phase-6B Action Zones / Mirror Test &amp; #phase-7 Mandatory 10-Point Self-Audit</span>
+        <span class="pill p-em">10 / 10 AUDIT GATES PASSED</span>
+      </div>
+      <div class="shot-wrap">
+        <img src="../examples/nvda/shot_12_p6_actions_p7_audit.png" alt="Phase 6 Action Zones, Mirror Test and Phase 7 Self Audit">
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 11: Action Sizing, Mirror Test &amp; 10-Point Audit</span>
+    <span>Slide 15 / 16</span>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 15: FUNCTION 11 (PHASE 8, PHASE 9 & QUICK START) ==================== -->
+<section class="slide">
+  <div class="s-head">
+    <div>
+      <div class="s-kicker">Function Walkthrough (12 / 12) · Phase 8, Phase 9 &amp; Quick Start</div>
+      <h2 class="s-title">AI Monetization Audit, Workforce/Triad, Final Synthesis &amp; How to Run</h2>
+    </div>
+    <div class="s-sub">Distinguishing real AI cash from hype, synthesizing all 9 phases, and running on any global ticker</div>
+  </div>
+
+  <div class="split-rail-wide">
+    <div class="rail-stack">
+      <div class="card card-navy">
+        <div class="c-lbl">Function 8 · AI, Headcount &amp; Triad Audit</div>
+        <h3 class="c-h">Direct Monetizer Proof &amp; Geo Risk</h3>
+        <ul class="tight">
+          <li><strong>AI Washing Detector:</strong> Verifies hard Data Center AI mix (<code>$107.6B Q3, 92.9%</code>) vs unverified hype.</li>
+          <li><strong>Workforce Leverage:</strong> Compares <code>Rev/Emp ($5.14M–$8.61M)</code> vs peers, linking to SG&amp;A and ROE.</li>
+          <li><strong>Global Triad:</strong> Plots <code>Americas / APAC / EMEA</code> sales &amp; foundry dependency.</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <div class="c-lbl">Function 9 · All-Phases Distilled Verdict</div>
+        <h3 class="c-h">Personas, Trade-Off &amp; 3 Triggers</h3>
+        <ul class="tight">
+          <li>Synthesizes Parts 1–8 into Investor Persona stances, a mandatory <strong>Core Trade-Off Thesis</strong>, and 3 explicit <em>Entry, Bull, and Exit Triggers</em>.</li>
+        </ul>
+      </div>
+      <div class="card card-em">
+        <div class="c-lbl">Quick Start in Antigravity</div>
+        <div class="formula" style="font-size:9.8px;margin:2px 0 4px;">python scripts/fetch_sec_edgar.py AAPL --out aapl.json</div>
+        <ul class="tight">
+          <li><strong>Full Broadsheet:</strong> Type any ticker (<code>NVDA</code>, <code>TSM</code>, <code>ADVANC</code>). <strong>Quick Triage:</strong> Add <code>quick</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;min-height:0;">
+      <div class="shot-box" style="flex:0 0 1.98in;">
+        <div class="shot-cap">
+          <span>Live Capture · #phase-8 AI Monetization Audit, Workforce Productivity &amp; Global Geographic Triad</span>
+          <span class="pill p-em">DIRECT AI MONETIZER</span>
+        </div>
+        <div class="shot-wrap">
+          <img src="../examples/nvda/shot_13_p8_ai_triad.png" alt="Phase 8 AI Monetization, Workforce Leverage and Geographic Triad">
+        </div>
+      </div>
+
+      <div class="shot-box" style="flex:1;">
+        <div class="shot-cap">
+          <span>Live Capture · #phase-9 Ultimate All-Phases Synthesis Table &amp; Final Distilled Verdict Box</span>
+          <span class="pill p-nv">ACTION: HOLD / ADD &lt;$157</span>
+        </div>
+        <div class="shot-wrap">
+          <img src="../examples/nvda/shot_14_p9_verdict.png" alt="Phase 9 Ultimate All-Phases Synthesis and Final Distilled Conclusion">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-foot">
+    <span>FPA Value Chain MC · Function 12: AI Audit, Phase 9 Synthesis &amp; Universal Quick Start</span>
+    <span>Slide 16 / 16</span>
+  </div>
+</section>
+
+</body>
+</html>
